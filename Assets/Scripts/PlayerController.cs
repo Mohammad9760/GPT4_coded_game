@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 	public float rotateSpeed = 10.0f;
 	public float resetSpeed = 1.0f;
 	public Transform child;
+	public AudioClip crashSound;
 	private Rigidbody rb;
 	private Quaternion originalRotation;
 
@@ -17,21 +18,33 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (Input.GetMouseButton(0))
+		if (!GameManager.instance.gameOver)
 		{
-			float moveHorizontal = Input.GetAxis("Mouse X");
+			if (Input.GetMouseButton(0))
+			{
+				float moveHorizontal = Input.GetAxis("Mouse X");
 
-			Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
+				Vector3 movement = new Vector3(moveHorizontal, 0.0f, 0.0f);
 
-			rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
+				rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 
-			float rotateHorizontal = Input.GetAxis("Mouse X");
+				float rotateHorizontal = Input.GetAxis("Mouse X");
 
-			Vector3 rotation = new Vector3(0.0f, rotateHorizontal * rotateSpeed, 0.0f);
+				Vector3 rotation = new Vector3(0.0f, rotateHorizontal * rotateSpeed, 0.0f);
 
-			child.Rotate(rotation * Time.deltaTime);
+				child.Rotate(rotation * Time.deltaTime);
+			}
+
+			child.rotation = Quaternion.Slerp(child.rotation, originalRotation, resetSpeed * Time.deltaTime);
 		}
+	}
 
-		child.rotation = Quaternion.Slerp(child.rotation, originalRotation, resetSpeed * Time.deltaTime);
+	void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.CompareTag("Obstacle"))
+		{
+			AudioSource.PlayClipAtPoint(crashSound, transform.position);
+			GameManager.instance.GameOver();
+		}
 	}
 }
