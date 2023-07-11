@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
 		{
 			AudioSource.PlayClipAtPoint(crashSound, transform.position);
 			GameManager.instance.GameOver();
+			GetComponent<Animation>().Play();
 		}
 	}
 }

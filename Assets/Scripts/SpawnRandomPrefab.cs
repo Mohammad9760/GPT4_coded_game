@@ -74,7 +74,7 @@ public class SpawnRandomPrefab : MonoBehaviour
 
 	IEnumerator<object> ReturnObjectToPoolCoroutine(GameObject o)
 	{
-		yield return new WaitForSeconds(Random.Range(2f, 5f));
+		yield return new WaitForSeconds(Random.Range(5f, 15f));
 
 		o.SetActive(false);
 	}
